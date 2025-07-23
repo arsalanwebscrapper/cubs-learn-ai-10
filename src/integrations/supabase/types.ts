@@ -291,6 +291,27 @@ export type Database = {
         Args: { p_username: string; p_password: string }
         Returns: Json
       }
+      generate_student_credentials: {
+        Args: { p_student_id: string; p_username: string; p_password: string }
+        Returns: Json
+      }
+      get_student_assignments: {
+        Args: { p_student_id: string }
+        Returns: {
+          assignment_id: string
+          title: string
+          description: string
+          due_date: string
+          total_marks: number
+          is_published: boolean
+          created_at: string
+          submitted: boolean
+          submission_id: string
+          marks_obtained: number
+          feedback: string
+          graded_at: string
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -301,6 +322,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      hash_password: {
+        Args: { password: string }
+        Returns: string
       }
     }
     Enums: {

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User, Session } from '@supabase/supabase-js';
@@ -20,6 +22,9 @@ import {
   LogOut
 } from "lucide-react";
 import cubsMascot from "@/assets/cubs-mascot.png";
+import BatchManagement from "@/components/teacher/BatchManagement";
+import StudentManagement from "@/components/teacher/StudentManagement";
+import AssignmentManagement from "@/components/teacher/AssignmentManagement";
 
 interface Profile {
   id: string;
@@ -297,153 +302,24 @@ const TeacherDashboard = () => {
           </TabsList>
 
           <TabsContent value="batches" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-batangas font-bold text-foreground">Your Batches</h2>
-              <Button variant="cubs">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Batch
-              </Button>
-            </div>
-            
-            <div className="grid gap-6">
-              {batches.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <GraduationCap className="w-12 h-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No batches yet</h3>
-                    <p className="text-muted-foreground text-center mb-6">Create your first batch to start teaching students</p>
-                    <Button variant="cubs">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create Your First Batch
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                batches.map((batch) => (
-                  <Card key={batch.id}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg">{batch.name}</CardTitle>
-                          <CardDescription>{batch.description}</CardDescription>
-                        </div>
-                        <Badge variant={batch.is_active ? "default" : "secondary"}>
-                          {batch.is_active ? "Active" : "Inactive"}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>Max Students: {batch.max_students}</span>
-                        <span>Created: {new Date(batch.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+            <BatchManagement 
+              teacherId={user.id} 
+              onBatchesChange={() => fetchUserData(user.id)} 
+            />
           </TabsContent>
 
           <TabsContent value="students" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-batangas font-bold text-foreground">Your Students</h2>
-              <Button variant="cubs">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Student
-              </Button>
-            </div>
-
-            <div className="grid gap-4">
-              {students.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <Users className="w-12 h-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No students yet</h3>
-                    <p className="text-muted-foreground text-center mb-6">Add students to start your teaching journey</p>
-                    <Button variant="cubs">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Your First Student
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                students.map((student) => (
-                  <Card key={student.id}>
-                    <CardContent className="flex items-center justify-between p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-primary font-semibold">
-                            {student.full_name.split(' ').map(n => n[0]).join('')}
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{student.full_name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {student.email} • Grade {student.grade} • Age {student.age}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
-                          Enrolled: {new Date(student.enrollment_date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+            <StudentManagement 
+              teacherId={user.id} 
+              onStudentsChange={() => fetchUserData(user.id)} 
+            />
           </TabsContent>
 
           <TabsContent value="assignments" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-batangas font-bold text-foreground">Assignments</h2>
-              <Button variant="cubs">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Assignment
-              </Button>
-            </div>
-
-            <div className="grid gap-4">
-              {assignments.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <FileText className="w-12 h-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No assignments yet</h3>
-                    <p className="text-muted-foreground text-center mb-6">Create assignments to assess your students</p>
-                    <Button variant="cubs">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create Your First Assignment
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                assignments.map((assignment) => (
-                  <Card key={assignment.id}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg">{assignment.title}</CardTitle>
-                          <CardDescription>{assignment.description}</CardDescription>
-                        </div>
-                        <Badge variant={assignment.is_published ? "default" : "secondary"}>
-                          {assignment.is_published ? "Published" : "Draft"}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>Total Marks: {assignment.total_marks}</span>
-                        <span className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          Due: {assignment.due_date ? new Date(assignment.due_date).toLocaleDateString() : 'No due date'}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+            <AssignmentManagement 
+              teacherId={user.id} 
+              onAssignmentsChange={() => fetchUserData(user.id)} 
+            />
           </TabsContent>
 
           <TabsContent value="profile" className="space-y-6">
