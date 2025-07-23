@@ -127,7 +127,7 @@ const StudentLogin = () => {
           
           <div className="mt-6 text-center">
             <Button variant="link" asChild>
-              <a href="/">← Back to Home</a>
+              <a href="/">← Back to Home </a>
             </Button>
           </div>
           
