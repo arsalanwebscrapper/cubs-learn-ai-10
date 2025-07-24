@@ -26,6 +26,7 @@ interface Student {
   username: string;
   is_login_enabled: boolean;
   enrollment_date: string;
+  generated_password?: string;
 }
 
 interface Batch {
@@ -191,6 +192,12 @@ const StudentManagement = ({ teacherId, onStudentsChange }: StudentManagementPro
 
       const result = data as any;
       if (result.success) {
+        // Update the students list to show the generated password
+        setStudents(prev => prev.map(s => 
+          s.id === student.id 
+            ? { ...s, username, generated_password: password, is_login_enabled: true }
+            : s
+        ));
         setGeneratedCredentials({ username, password });
         setIsCredentialsDialogOpen(true);
         fetchStudents();
@@ -433,7 +440,17 @@ const StudentManagement = ({ teacherId, onStudentsChange }: StudentManagementPro
                         {student.is_active ? "Active" : "Inactive"}
                       </Badge>
                       {student.is_login_enabled && (
-                        <Badge variant="outline">Login Enabled</Badge>
+                        <div className="flex flex-col gap-1">
+                          <Badge variant="outline">Login Enabled</Badge>
+                          {student.username && (
+                            <div className="text-xs text-muted-foreground">
+                              <div>Username: <span className="font-mono">{student.username}</span></div>
+                              {student.generated_password && (
+                                <div>Password: <span className="font-mono">{student.generated_password}</span></div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

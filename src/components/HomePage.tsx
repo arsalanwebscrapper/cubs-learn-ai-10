@@ -142,16 +142,17 @@ const HomePage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-hero opacity-30"></div>
+      <section className="relative py-12 lg:py-32 overflow-hidden bg-background lg:bg-gradient-hero">
+        <div className="absolute inset-0 bg-gradient-hero opacity-30 hidden lg:block"></div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+            {/* Mobile: Text first, then image */}
+            <div className="space-y-6 lg:space-y-8 order-1 lg:order-1">
               <div className="space-y-4">
-                <h1 className="text-4xl lg:text-6xl font-batangas font-bold text-foreground leading-tight">
-                  We are building <span className="text-primary">future cubs</span> at StudyCubs
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-batangas font-bold text-foreground lg:text-white leading-tight">
+                  We are building <span className="text-primary bg-gradient-text bg-clip-text text-transparent lg:text-primary">future cubs</span> at StudyCubs
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
+                <p className="text-lg lg:text-xl text-muted-foreground lg:text-white/90 leading-relaxed">
                   Empowering learners with future-ready skills in a playful, personalized environment.
                 </p>
               </div>
@@ -159,11 +160,11 @@ const HomePage = () => {
                 <Button variant="hero" size="xl" asChild>
                   <Link to="#programs">Explore Programs</Link>
                 </Button>
-                <Button variant="outline" size="xl" asChild>
+                <Button variant="outline" size="xl" className="lg:bg-white/10 lg:border-white/20 lg:text-white lg:hover:bg-white/20" asChild>
                   <Link to="/auth">Book a Free Class</Link>
                 </Button>
               </div>
-              <div className="flex items-center space-x-8 text-sm text-muted-foreground">
+              <div className="flex items-center space-x-8 text-sm text-muted-foreground lg:text-white/80">
                 <div className="flex items-center space-x-2">
                   <Star className="w-5 h-5 fill-secondary text-secondary" />
                   <span>10,000+ Happy Students</span>
@@ -174,16 +175,18 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <div className="relative">
+            
+            {/* Mobile: Image below text, Desktop: Image on right */}
+            <div className="relative mt-8 lg:mt-0 order-2 lg:order-2">
               <img 
                 src={heroImage} 
                 alt="Happy children learning" 
                 className="rounded-2xl shadow-cubs w-full object-cover aspect-[4/3]"
               />
-              <div className="absolute -bottom-4 -left-4 bg-secondary text-white px-6 py-3 rounded-lg shadow-lg">
+              <div className="absolute -bottom-4 -left-4 bg-secondary text-white px-4 lg:px-6 py-2 lg:py-3 rounded-lg shadow-lg">
                 <div className="flex items-center space-x-2">
-                  <Heart className="w-5 h-5" />
-                  <span className="font-semibold">Trusted by 10,000+ parents</span>
+                  <Heart className="w-4 lg:w-5 h-4 lg:h-5" />
+                  <span className="font-semibold text-sm lg:text-base">Trusted by 10,000+ parents</span>
                 </div>
               </div>
             </div>
