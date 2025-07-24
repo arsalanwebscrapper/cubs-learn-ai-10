@@ -149,7 +149,7 @@ const HomePage = () => {
             {/* Mobile: Text first, then image */}
             <div className="space-y-6 lg:space-y-8 order-1 lg:order-1">
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-batangas font-bold text-foreground lg:text-white leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-batangas font-bold text-foreground lg:text-blue leading-tight">
                   We are building <span className="text-primary lg:text-secondary">future cubs</span> at StudyCubs
                 </h1>
                 <p className="text-lg lg:text-xl text-muted-foreground lg:text-white/90 leading-relaxed">
