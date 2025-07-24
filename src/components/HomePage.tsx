@@ -150,7 +150,7 @@ const HomePage = () => {
             <div className="space-y-6 lg:space-y-8 order-1 lg:order-1">
               <div className="space-y-4">
                 <h1 className="text-3xl sm:text-4xl lg:text-6xl font-batangas font-bold text-foreground lg:text-white leading-tight">
-                  We are building <span className="text-primary bg-gradient-text bg-clip-text text-transparent lg:text-primary">future cubs</span> at StudyCubs
+                  We are building <span className="text-primary lg:text-secondary">future cubs</span> at StudyCubs
                 </h1>
                 <p className="text-lg lg:text-xl text-muted-foreground lg:text-white/90 leading-relaxed">
                   Empowering learners with future-ready skills in a playful, personalized environment.
