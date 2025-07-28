@@ -127,3 +127,64 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-fade-in.delay-200 {
+    animation-delay: 0.2s;
+    opacity: 0;
+  }
+  
+  .animate-fade-in.delay-400 {
+    animation-delay: 0.4s;
+    opacity: 0;
+  }
+  
+  .animate-fade-in.delay-600 {
+    animation-delay: 0.6s;
+    opacity: 0;
+  }
+  
+  .animate-bounce.delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animate-bounce.delay-700 {
+    animation-delay: 0.7s;
+  }
+  
+  .animate-bounce.delay-1000 {
+    animation-delay: 1s;
+  }
+  
+  .animate-pulse.delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-pulse.delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animate-pulse.delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animate-pulse.delay-800 {
+    animation-delay: 0.8s;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

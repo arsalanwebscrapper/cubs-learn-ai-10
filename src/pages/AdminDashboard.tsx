@@ -21,6 +21,7 @@ import {
   UserCheck
 } from "lucide-react";
 import cubsMascot from "@/assets/cubs-mascot.png";
+import FranchisePageCreator from "@/components/admin/FranchisePageCreator";
 
 interface Profile {
   id: string;
@@ -344,12 +345,13 @@ const AdminDashboard = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full lg:w-[800px] grid-cols-5">
+          <TabsList className="grid w-full lg:w-[1000px] grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="teachers">Teachers</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="batches">Batches</TabsTrigger>
             <TabsTrigger value="assignments">Assignments</TabsTrigger>
+            <TabsTrigger value="franchise">Franchise Pages</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -573,6 +575,10 @@ const AdminDashboard = () => {
                 </Card>
               ))}
             </div>
+          </TabsContent>
+
+          <TabsContent value="franchise" className="space-y-6">
+            <FranchisePageCreator />
           </TabsContent>
         </Tabs>
       </div>
