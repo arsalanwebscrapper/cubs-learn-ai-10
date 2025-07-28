@@ -1,22 +1,32 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Mail, Clock, Users, BookOpen, Trophy, Star } from "lucide-react";
 
 interface FranchisePageData {
   id: string;
-  cityName: string;
-  centerName: string;
-  address: string;
-  phone: string;
-  email: string;
-  description: string;
-  features: string[];
-  seoTitle: string;
-  seoDescription: string;
-  keywords: string[];
+  city: string;
+  state: string;
+  title: string;
+  meta_description: string;
+  meta_keywords: string;
+  h1_heading: string;
+  hero_subtitle: string;
+  hero_description: string;
+  about_section: string;
+  programs_section: string;
+  why_choose_section: string;
+  contact_info: {
+    address: string;
+    phone: string;
+    email: string;
+    hours: string;
+  };
+  local_keywords: string;
+  schema_markup: string;
+  is_published: boolean;
   slug: string;
 }
 
@@ -39,7 +49,7 @@ const FranchisePage = () => {
   useEffect(() => {
     if (pageData) {
       // Update SEO meta tags
-      document.title = pageData.seoTitle;
+      document.title = pageData.title;
       
       // Update meta description
       let metaDescription = document.querySelector('meta[name="description"]');
@@ -48,7 +58,7 @@ const FranchisePage = () => {
         metaDescription.setAttribute('name', 'description');
         document.head.appendChild(metaDescription);
       }
-      metaDescription.setAttribute('content', pageData.seoDescription);
+      metaDescription.setAttribute('content', pageData.meta_description);
 
       // Update meta keywords
       let metaKeywords = document.querySelector('meta[name="keywords"]');
@@ -57,7 +67,7 @@ const FranchisePage = () => {
         metaKeywords.setAttribute('name', 'keywords');
         document.head.appendChild(metaKeywords);
       }
-      metaKeywords.setAttribute('content', pageData.keywords.join(', '));
+      metaKeywords.setAttribute('content', pageData.meta_keywords);
     }
   }, [pageData]);
 
@@ -96,13 +106,13 @@ const FranchisePage = () => {
           <div className="text-center max-w-4xl mx-auto">
             <Badge className="mb-4 bg-primary/20 text-primary border-primary/30">
               <MapPin className="w-4 h-4 mr-2" />
-              {pageData.cityName}
+              {pageData.city}, {pageData.state}
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-              {pageData.centerName}
+              {pageData.h1_heading}
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {pageData.description}
+              {pageData.hero_description}
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <Button size="lg" className="bg-primary hover:bg-primary/90">
@@ -126,7 +136,7 @@ const FranchisePage = () => {
               <CardContent className="p-6">
                 <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Address</h3>
-                <p className="text-muted-foreground">{pageData.address}</p>
+                <p className="text-muted-foreground">{pageData.contact_info.address}</p>
               </CardContent>
             </Card>
             
@@ -134,7 +144,7 @@ const FranchisePage = () => {
               <CardContent className="p-6">
                 <Phone className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Phone</h3>
-                <p className="text-muted-foreground">{pageData.phone}</p>
+                <p className="text-muted-foreground">{pageData.contact_info.phone}</p>
               </CardContent>
             </Card>
             
@@ -142,33 +152,51 @@ const FranchisePage = () => {
               <CardContent className="p-6">
                 <Mail className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Email</h3>
-                <p className="text-muted-foreground">{pageData.email}</p>
+                <p className="text-muted-foreground">{pageData.contact_info.email}</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* About & Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Why Choose {pageData.centerName}?</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {pageData.features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    {index === 0 && <BookOpen className="w-8 h-8 text-primary" />}
-                    {index === 1 && <Users className="w-8 h-8 text-primary" />}
-                    {index === 2 && <Trophy className="w-8 h-8 text-primary" />}
-                    {index === 3 && <Star className="w-8 h-8 text-primary" />}
-                    {index === 4 && <Clock className="w-8 h-8 text-primary" />}
-                    {index >= 5 && <BookOpen className="w-8 h-8 text-primary" />}
-                  </div>
-                  <p className="text-foreground font-medium">{feature}</p>
+          <h2 className="text-4xl font-bold text-center mb-12">About StudyCubs {pageData.city}</h2>
+          <div className="max-w-4xl mx-auto">
+            <Card className="mb-12">
+              <CardContent className="p-8">
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  {pageData.about_section}
+                </p>
+              </CardContent>
+            </Card>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <BookOpen className="w-6 h-6 text-primary mr-2" />
+                    Our Programs
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{pageData.programs_section}</p>
                 </CardContent>
               </Card>
-            ))}
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Star className="w-6 h-6 text-primary mr-2" />
+                    Why Choose Us
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{pageData.why_choose_section}</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
@@ -178,12 +206,12 @@ const FranchisePage = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Child's Journey?</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join hundreds of parents in {pageData.cityName} who trust {pageData.centerName} for their child's education.
+            Join hundreds of parents in {pageData.city} who trust StudyCubs {pageData.city} for their child's education.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
               <Phone className="w-5 h-5 mr-2" />
-              Call {pageData.phone}
+              Call {pageData.contact_info.phone}
             </Button>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
               <Mail className="w-5 h-5 mr-2" />
@@ -197,7 +225,7 @@ const FranchisePage = () => {
       <footer className="bg-card py-8 border-t">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground">
-            © 2024 {pageData.centerName}. Part of StudyCubs Learning Network.
+            © 2024 StudyCubs {pageData.city}. Part of StudyCubs Learning Network.
           </p>
         </div>
       </footer>

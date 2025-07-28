@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -48,6 +48,7 @@ interface FranchisePage {
   local_keywords: string;
   schema_markup: string;
   is_published: boolean;
+  slug?: string;
 }
 
 const FranchisePageCreator = () => {
@@ -77,6 +78,14 @@ const FranchisePageCreator = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
   const { toast } = useToast();
+
+  // Load existing pages from localStorage on component mount
+  useEffect(() => {
+    const storedPages = localStorage.getItem('franchisePages');
+    if (storedPages) {
+      setPages(JSON.parse(storedPages));
+    }
+  }, []);
 
   const generateSEOContent = (city: string, state: string) => {
     const capitalizedCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
@@ -125,18 +134,23 @@ const FranchisePageCreator = () => {
       // Save to localStorage for now (we'll add database integration after SQL is run)
       const pageData = {
         ...currentPage,
-        slug: `${currentPage.city.toLowerCase()}-${currentPage.state.toLowerCase()}`,
+        slug: `${currentPage.city.toLowerCase().replace(/\s+/g, '-')}-${currentPage.state.toLowerCase().replace(/\s+/g, '-')}`,
         id: editingId || `${Date.now()}`
       };
 
+      let updatedPages;
       if (editingId) {
         // Update existing page
-        setPages(prev => prev.map(p => p.id === editingId ? pageData : p));
-        setEditingId(null);
+        updatedPages = pages.map(p => p.id === editingId ? pageData : p);
       } else {
         // Create new page
-        setPages(prev => [...prev, pageData]);
+        updatedPages = [...pages, pageData];
       }
+
+      setPages(updatedPages);
+      
+      // Save to localStorage
+      localStorage.setItem('franchisePages', JSON.stringify(updatedPages));
 
       toast({
         title: "Success",
@@ -166,6 +180,10 @@ const FranchisePageCreator = () => {
         schema_markup: "",
         is_published: false
       });
+      
+      if (editingId) {
+        setEditingId(null);
+      }
     } catch (error) {
       console.error('Error saving page:', error);
       toast({
@@ -174,6 +192,35 @@ const FranchisePageCreator = () => {
         variant: "destructive"
       });
     }
+  };
+
+  const handlePublish = (pageId: string) => {
+    const updatedPages = pages.map(p => 
+      p.id === pageId ? { ...p, is_published: !p.is_published } : p
+    );
+    setPages(updatedPages);
+    localStorage.setItem('franchisePages', JSON.stringify(updatedPages));
+    
+    const page = updatedPages.find(p => p.id === pageId);
+    toast({
+      title: "Success",
+      description: `Page ${page?.is_published ? 'published' : 'unpublished'} successfully!`
+    });
+  };
+
+  const handleEdit = (page: FranchisePage) => {
+    setCurrentPage(page);
+    setEditingId(page.id || null);
+  };
+
+  const handleDelete = (pageId: string) => {
+    const updatedPages = pages.filter(p => p.id !== pageId);
+    setPages(updatedPages);
+    localStorage.setItem('franchisePages', JSON.stringify(updatedPages));
+    toast({
+      title: "Success",
+      description: "Page deleted successfully!"
+    });
   };
 
   const AnimatedHeroPreview = () => (
@@ -542,22 +589,48 @@ const FranchisePageCreator = () => {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
-              {pages.map((page) => (
+              {pages.map((page: any) => (
                 <div key={page.id} className="flex items-center justify-between p-4 border rounded">
-                  <div>
+                  <div className="flex-1">
                     <h3 className="font-semibold">{page.city}, {page.state}</h3>
-                    <p className="text-sm text-muted-foreground">{page.title}</p>
+                    <p className="text-sm text-muted-foreground mb-2">{page.title}</p>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 text-xs rounded ${page.is_published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                        {page.is_published ? 'Published' : 'Draft'}
+                      </span>
+                      {page.is_published && (
+                        <a 
+                          href={`/studycubs-${page.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline text-xs"
+                        >
+                          /studycubs-{page.slug}
+                        </a>
+                      )}
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
+                      variant={page.is_published ? "default" : "secondary"}
+                      size="sm"
+                      onClick={() => handlePublish(page.id)}
+                    >
+                      {page.is_published ? 'Unpublish' : 'Publish'}
+                    </Button>
+                    <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setCurrentPage(page);
-                        setEditingId(page.id || null);
-                      }}
+                      onClick={() => handleEdit(page)}
                     >
                       Edit
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDelete(page.id)}
+                    >
+                      Delete
                     </Button>
                   </div>
                 </div>
