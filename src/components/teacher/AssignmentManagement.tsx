@@ -437,10 +437,65 @@ const AssignmentManagement = ({ teacherId, onAssignmentsChange }: AssignmentMana
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
-                          <Edit className="w-4 h-4" />
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              const { error } = await supabase
+                                .from('assignments')
+                                .update({ is_published: !assignment.is_published })
+                                .eq('id', assignment.id);
+
+                              if (error) throw error;
+
+                              toast({
+                                title: "Success",
+                                description: `Assignment ${assignment.is_published ? 'unpublished' : 'published'} successfully!`
+                              });
+
+                              fetchAssignments();
+                            } catch (error) {
+                              console.error('Error updating assignment:', error);
+                              toast({
+                                title: "Error",
+                                description: "Failed to update assignment",
+                                variant: "destructive"
+                              });
+                            }
+                          }}
+                        >
+                          {assignment.is_published ? "Unpublish" : "Publish"}
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              const { error } = await supabase
+                                .from('assignments')
+                                .delete()
+                                .eq('id', assignment.id);
+
+                              if (error) throw error;
+
+                              toast({
+                                title: "Success",
+                                description: "Assignment deleted successfully!"
+                              });
+
+                              fetchAssignments();
+                              onAssignmentsChange();
+                            } catch (error) {
+                              console.error('Error deleting assignment:', error);
+                              toast({
+                                title: "Error",
+                                description: "Failed to delete assignment",
+                                variant: "destructive"
+                              });
+                            }
+                          }}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
